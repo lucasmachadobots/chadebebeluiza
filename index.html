@@ -469,6 +469,12 @@
         <h2>Recadinhos</h2>
         <p class="muted">As mensagens enviadas aparecem aqui automaticamente.</p>
         <div class="wall" id="wall"></div>
+
+        <div class="actions" style="margin-top:12px; justify-content:space-between; width:100%; gap:12px;">
+          <button class="btn btnGhost" type="button" id="prevPage">Anterior</button>
+          <div class="chip" id="pageInfo" style="margin:0; flex:1; justify-content:center;">Página 1 de 1</div>
+          <button class="btn btnGhost" type="button" id="nextPage">Próxima</button>
+        </div>
       </div>
     </section>
   </div>
@@ -500,10 +506,10 @@
     const $ = (id) => document.getElementById(id);
     const pad = (n) => String(n).padStart(2, "0");
 
-    const setText = (id, val) => {
+    function setText(id, val){
       const el = $(id);
       if (el) el.textContent = val;
-    };
+    }
 
     setText("babyName", CONFIG.babyName);
     setText("themeName", CONFIG.themeName);
@@ -545,7 +551,6 @@
 
     function downloadICS(){
       const fmt = (d) => d.toISOString().replace(/[-:]/g,'').split('.')[0] + "Z";
-
       const ics =
 `BEGIN:VCALENDAR
 VERSION:2.0
@@ -560,7 +565,6 @@ LOCATION:${CONFIG.eventPlaceShort}
 DESCRIPTION:Confirmação de presença pelo site.
 END:VEVENT
 END:VCALENDAR`;
-
       const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
       const a = document.createElement("a");
       const url = URL.createObjectURL(blob);
@@ -643,51 +647,48 @@ END:VCALENDAR`;
       try { return JSON.parse(text); } catch { return {}; }
     }
 
-    async function loadRecados(){
+    let CURRENT_PAGE = 1;
+    let TOTAL_PAGES = 1;
+
+    function updatePager(){
+      const prev = $("prevPage");
+      const next = $("nextPage");
+      const info = $("pageInfo");
+      if (info) info.textContent = `Página ${CURRENT_PAGE} de ${TOTAL_PAGES}`;
+      if (prev) prev.disabled = CURRENT_PAGE <= 1;
+      if (next) next.disabled = CURRENT_PAGE >= TOTAL_PAGES;
+    }
+
+    async function loadRecados(page = CURRENT_PAGE){
       try{
-        const res = await fetch(CONFIG.recadosListEndpoint, { method: "GET", cache: "no-store" });
+        const url = CONFIG.recadosListEndpoint + "?page=" + encodeURIComponent(String(page));
+        const res = await fetch(url, { method: "GET", cache: "no-store" });
         const data = await readJson(res);
         if (!res.ok || data.success === false) return;
+
+        CURRENT_PAGE = Number(data.page || 1);
+        TOTAL_PAGES = Number(data.totalPages || 1);
+
         renderWall(data.items || []);
+        updatePager();
       }catch{}
     }
 
-    function buildMensagem(payload){
-  const parts = [];
-  parts.push(`Confirmação: ${payload.going}`);
-  parts.push(`Adultos: ${payload.adults}`);
-  parts.push(`Crianças: ${payload.kids}`);
-  if (payload.diet) parts.push(`Restrição: ${payload.diet}`);
-  if (payload.message) parts.push(`Recado: ${payload.message}`);
-  return parts.join(" | ").slice(0, 1000);
-}
+    async function salvarRecado(payload){
+      const body = { nome: payload.name, whatsapp: payload.whats, mensagem: payload.message };
 
-async function salvarRecado(payload){
-  const body = { nome: payload.name, whatsapp: payload.whats, mensagem: payload.message };
+      const res = await fetch(CONFIG.recadosAddEndpoint, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(body)
+      });
 
-  const res = await fetch(CONFIG.recadosAddEndpoint, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(body)
-  });
+      const data = await readJson(res);
 
-  const text = await res.text();
-  let data = {};
-  try { data = JSON.parse(text); } catch {}
-
-  if (!res.ok || data.success === false) {
-    throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
-  }
-}
-
-  const text = await res.text();
-  let data = {};
-  try { data = JSON.parse(text); } catch {}
-
-  if (!res.ok || data.success === false) {
-    throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
-  }
-}
+      if (!res.ok || data.success === false) {
+        throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
+      }
+    }
 
     const btnPreview = $("btnPreview");
     if (btnPreview) {
@@ -710,57 +711,61 @@ async function salvarRecado(payload){
       });
     }
 
+    const prevBtn = $("prevPage");
+    if (prevBtn) prevBtn.addEventListener("click", () => {
+      if (CURRENT_PAGE > 1) loadRecados(CURRENT_PAGE - 1);
+    });
+
+    const nextBtn = $("nextPage");
+    if (nextBtn) nextBtn.addEventListener("click", () => {
+      if (CURRENT_PAGE < TOTAL_PAGES) loadRecados(CURRENT_PAGE + 1);
+    });
+
     const form = $("rsvpForm");
     if (form) {
       form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+        e.preventDefault();
 
-  const payload = {
-    name: ($("name").value || "").trim(),
-    whats: ($("whats").value || "").trim(),
-    going: ($("going").value || ""),
-    adults: ($("adults").value || "1"),
-    kids: ($("kids").value || "0"),
-    diet: ($("diet").value || "").trim(),
-    message: ($("message").value || "").trim(),
-    created_at: new Date().toISOString()
-  };
+        const payload = {
+          name: ($("name").value || "").trim(),
+          whats: ($("whats").value || "").trim(),
+          going: ($("going").value || ""),
+          adults: ($("adults").value || "1"),
+          kids: ($("kids").value || "0"),
+          diet: ($("diet").value || "").trim(),
+          message: ($("message").value || "").trim()
+        };
 
-  if (!payload.name || !payload.going) {
-    showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
-    return;
-  }
+        if(!payload.name || !payload.going){
+          showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
+          return;
+        }
 
-  if (!payload.message) {
-    showToast("Recadinho", "Escreva um recado para aparecer nos recadinhos.");
-    return;
-  }
+        if(!payload.message){
+          showToast("Recadinho", "Para aparecer nos recadinhos, escreva uma mensagem.");
+          return;
+        }
 
-  const btn = $("submitBtn");
-  const old = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "Enviando...";
+        const btn = $("submitBtn");
+        const old = btn ? btn.textContent : "";
+        if (btn) { btn.disabled = true; btn.textContent = "Enviando..."; }
 
-  try{
-    await salvarRecado(payload);
-    showToast("Enviado", "Recado publicado.");
-    confetti();
-    form.reset();
-    await loadRecados(1);
-  }catch(err){
-    showToast("Erro", (err && err.message) ? err.message : "Tente novamente.");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = old;
-  }
-});
+        try{
+          await salvarRecado(payload);
+          showToast("Enviado", "Recado publicado.");
+          confetti();
+          form.reset();
+          await loadRecados(1);
+        }catch(err){
+          showToast("Erro", (err && err.message) ? err.message : "Tente novamente.");
+        }finally{
+          if (btn) { btn.disabled = false; btn.textContent = old; }
+        }
+      });
+    }
 
-    loadRecados();
-    setInterval(loadRecados, 15000);
+    loadRecados(1);
+    setInterval(() => loadRecados(CURRENT_PAGE), 15000);
   </script>
 </body>
-
 </html>
-
-
-
