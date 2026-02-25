@@ -675,21 +675,22 @@ END:VCALENDAR`;
     }
 
     async function salvarRecado(payload){
-      const body = { nome: payload.name, whatsapp: payload.whats, mensagem: payload.message };
+  const body = { nome: payload.name, whatsapp: payload.whats, mensagem: payload.message };
 
-      const res = await fetch(CONFIG.recadosAddEndpoint, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(body)
-      });
+  const res = await fetch(CONFIG.recadosAddEndpoint, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(body)
+  });
 
-      const data = await readJson(res);
+  const text = await res.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch {}
 
-      if (!res.ok || data.success === false) {
-        throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
-      }
-    }
-
+  if (!res.ok || data.success === false) {
+    throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
+  }
+}
     const btnPreview = $("btnPreview");
     if (btnPreview) {
       btnPreview.addEventListener("click", () => {
@@ -721,7 +722,7 @@ END:VCALENDAR`;
       if (CURRENT_PAGE < TOTAL_PAGES) loadRecados(CURRENT_PAGE + 1);
     });
 
-    const form = $("rsvpForm");
+   const form = $("rsvpForm");
 
 if (form) {
   form.addEventListener("submit", async function (e) {
@@ -743,27 +744,25 @@ if (form) {
       return;
     }
 
-    if (!payload.message) {
-      showToast("Recadinho", "Para aparecer nos recadinhos, escreva uma mensagem.");
-      return;
-    }
-
     const btn = $("submitBtn");
-    const oldText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = "Enviando...";
+    const oldText = btn ? btn.textContent : "";
+    if (btn) { btn.disabled = true; btn.textContent = "Enviando..."; }
 
     try {
-      await salvarRecado(payload);
-      showToast("Enviado!", "Recado publicado com sucesso.");
+      if (payload.message) {
+        await salvarRecado(payload);
+        await loadRecados(1);
+        showToast("Enviado!", "Recado publicado com sucesso.");
+      } else {
+        showToast("Enviado!", "Confirmação registrada.");
+      }
+
       confetti();
       form.reset();
-      loadRecados(1);
     } catch (err) {
       showToast("Erro", err?.message || "Erro ao enviar.");
     } finally {
-      btn.disabled = false;
-      btn.textContent = oldText;
+      if (btn) { btn.disabled = false; btn.textContent = oldText; }
     }
   });
 }
@@ -773,4 +772,5 @@ if (form) {
   </script>
 </body>
 </html>
+
 
