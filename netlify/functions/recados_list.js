@@ -22,6 +22,14 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ success: false }) };
   }
 
+  const qs = event.queryStringParameters || {};
+  const pageSize = 7;
+  let page = parseInt(qs.page, 10);
+  if (!Number.isFinite(page) || page < 1) page = 1;
+  if (page > 1000000) page = 1000000;
+
+  const offset = (page - 1) * pageSize;
+
   let conn;
   try {
     conn = await mysql.createConnection({
@@ -33,11 +41,33 @@ exports.handler = async (event) => {
       charset: "utf8mb4"
     });
 
-    const [rows] = await conn.execute(
-      "SELECT id, nome, mensagem, created_at FROM recados WHERE aprovado = 1 ORDER BY id DESC LIMIT 30"
+    const [[countRow]] = await conn.execute(
+      "SELECT COUNT(*) AS total FROM recados WHERE aprovado = 1"
     );
 
-    return { statusCode: 200, headers, body: JSON.stringify({ success: true, items: rows || [] }) };
+    const total = Number(countRow?.total || 0);
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if (page > totalPages) page = totalPages;
+
+    const finalOffset = (page - 1) * pageSize;
+
+    const [rows] = await conn.execute(
+      "SELECT id, nome, mensagem, created_at FROM recados WHERE aprovado = 1 ORDER BY id DESC LIMIT ? OFFSET ?",
+      [pageSize, finalOffset]
+    );
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        success: true,
+        items: rows || [],
+        page,
+        pageSize,
+        total,
+        totalPages
+      })
+    };
   } catch {
     return { statusCode: 500, headers, body: JSON.stringify({ success: false }) };
   } finally {
