@@ -652,22 +652,37 @@ END:VCALENDAR`;
       }catch{}
     }
 
-    async function salvarRecado(payload){
-      const msg = (payload.message || "").trim();
-      const body = { nome: payload.name, whatsapp: payload.whats, mensagem: msg };
+    function buildMensagem(payload){
+  const parts = [];
+  parts.push(`Confirmação: ${payload.going}`);
+  parts.push(`Adultos: ${payload.adults}`);
+  parts.push(`Crianças: ${payload.kids}`);
+  if (payload.diet) parts.push(`Restrição: ${payload.diet}`);
+  if (payload.message) parts.push(`Recado: ${payload.message}`);
+  return parts.join(" | ").slice(0, 1000);
+}
 
-      const res = await fetch(CONFIG.recadosAddEndpoint, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify(body)
-      });
+async function salvarRecado(payload){
+  const body = {
+    nome: payload.name,
+    whatsapp: payload.whats,
+    mensagem: buildMensagem(payload)
+  };
 
-      const data = await readJson(res);
+  const res = await fetch(CONFIG.recadosAddEndpoint, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(body)
+  });
 
-      if (!res.ok || data.success === false) {
-        throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
-      }
-    }
+  const text = await res.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch {}
+
+  if (!res.ok || data.success === false) {
+    throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
+  }
+}
 
     const btnPreview = $("btnPreview");
     if (btnPreview) {
@@ -735,3 +750,4 @@ END:VCALENDAR`;
 </body>
 
 </html>
+
