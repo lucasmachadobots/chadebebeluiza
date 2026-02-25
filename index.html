@@ -409,7 +409,7 @@
         <h2>Confirmação de presença</h2>
         <p class="muted">Preencha rapidinho.</p>
 
-        <form id="rsvpForm" autocomplete="on">
+        <form id="rsvpForm" method="post" action="javascript:void(0)" autocomplete="on">
           <div>
             <label>Seu nome</label>
             <input id="name" name="name" placeholder="Ex: Maria Silva" required />
@@ -722,50 +722,55 @@ END:VCALENDAR`;
     });
 
     const form = $("rsvpForm");
-    if (form) {
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
 
-        const payload = {
-          name: ($("name").value || "").trim(),
-          whats: ($("whats").value || "").trim(),
-          going: ($("going").value || ""),
-          adults: ($("adults").value || "1"),
-          kids: ($("kids").value || "0"),
-          diet: ($("diet").value || "").trim(),
-          message: ($("message").value || "").trim()
-        };
+if (form) {
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-        if(!payload.name || !payload.going){
-          showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
-          return;
-        }
+    const payload = {
+      name: ($("name").value || "").trim(),
+      whats: ($("whats").value || "").trim(),
+      going: ($("going").value || ""),
+      adults: ($("adults").value || "1"),
+      kids: ($("kids").value || "0"),
+      diet: ($("diet").value || "").trim(),
+      message: ($("message").value || "").trim()
+    };
 
-        if(!payload.message){
-          showToast("Recadinho", "Para aparecer nos recadinhos, escreva uma mensagem.");
-          return;
-        }
-
-        const btn = $("submitBtn");
-        const old = btn ? btn.textContent : "";
-        if (btn) { btn.disabled = true; btn.textContent = "Enviando..."; }
-
-        try{
-          await salvarRecado(payload);
-          showToast("Enviado", "Recado publicado.");
-          confetti();
-          form.reset();
-          await loadRecados(1);
-        }catch(err){
-          showToast("Erro", (err && err.message) ? err.message : "Tente novamente.");
-        }finally{
-          if (btn) { btn.disabled = false; btn.textContent = old; }
-        }
-      });
+    if (!payload.name || !payload.going) {
+      showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
+      return;
     }
+
+    if (!payload.message) {
+      showToast("Recadinho", "Para aparecer nos recadinhos, escreva uma mensagem.");
+      return;
+    }
+
+    const btn = $("submitBtn");
+    const oldText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    try {
+      await salvarRecado(payload);
+      showToast("Enviado!", "Recado publicado com sucesso.");
+      confetti();
+      form.reset();
+      loadRecados(1);
+    } catch (err) {
+      showToast("Erro", err?.message || "Erro ao enviar.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = oldText;
+    }
+  });
+}
 
     loadRecados(1);
     setInterval(() => loadRecados(CURRENT_PAGE), 15000);
   </script>
 </body>
 </html>
+
