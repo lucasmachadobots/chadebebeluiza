@@ -708,41 +708,47 @@ async function salvarRecado(payload){
     const form = $("rsvpForm");
     if (form) {
       form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+  e.preventDefault();
 
-        const payload = {
-          name: ($("name").value || "").trim(),
-          whats: ($("whats").value || "").trim(),
-          going: ($("going").value || ""),
-          adults: ($("adults").value || "1"),
-          kids: ($("kids").value || "0"),
-          diet: ($("diet").value || "").trim(),
-          message: ($("message").value || "").trim(),
-          created_at: new Date().toISOString()
-        };
+  const payload = {
+    name: ($("name").value || "").trim(),
+    whats: ($("whats").value || "").trim(),
+    going: ($("going").value || ""),
+    adults: ($("adults").value || "1"),
+    kids: ($("kids").value || "0"),
+    diet: ($("diet").value || "").trim(),
+    message: ($("message").value || "").trim(),
+    created_at: new Date().toISOString()
+  };
 
-        if(!payload.name || !payload.going){
-          showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
-          return;
-        }
+  if (!payload.name || !payload.going) {
+    showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
+    return;
+  }
 
-        const btn = $("submitBtn");
-        const old = btn ? btn.textContent : "";
-        if (btn) { btn.disabled = true; btn.textContent = "Enviando..."; }
+  if (!payload.message) {
+    showToast("Recadinho", "Escreva um recado para aparecer nos recadinhos.");
+    return;
+  }
 
-        try{
-          await salvarRecado(payload);
-          showToast("Enviado", "Confirmação registrada.");
-          confetti();
-          form.reset();
-          await loadRecados();
-        }catch(err){
-          showToast("Erro", (err && err.message) ? err.message : "Tente novamente.");
-        }finally{
-          if (btn) { btn.disabled = false; btn.textContent = old; }
-        }
-      });
-    }
+  const btn = $("submitBtn");
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+
+  try{
+    await salvarRecado(payload);
+    showToast("Enviado", "Recado publicado.");
+    confetti();
+    form.reset();
+    await loadRecados(1);
+  }catch(err){
+    showToast("Erro", (err && err.message) ? err.message : "Tente novamente.");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = old;
+  }
+});
 
     loadRecados();
     setInterval(loadRecados, 15000);
@@ -750,4 +756,5 @@ async function salvarRecado(payload){
 </body>
 
 </html>
+
 
