@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chá de Bebê — Safari Baby • Confirmação</title>
+  <meta name="description" content="Confirme sua presença no nosso chá de bebê Safari Baby" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500,650&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#fbf4ef;
+      --card:#ffffffcc;
+      --text:#2a2320;
+      --muted:#6b625c;
+      --brand:#d86a87;
+      --brand2:#d6bf96;
+      --brand3:#8a5a3a;
+      --leaf:#3f6b52;
+      --line:rgba(255,255,255,.72);
+      --shadow: 0 30px 80px rgba(18, 20, 26, .14);
+      --radius: 22px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 520px at 18% 10%, rgba(216,106,135,.18) 0%, transparent 60%),
+        radial-gradient(820px 520px at 85% 20%, rgba(214,191,150,.22) 0%, transparent 58%),
+        radial-gradient(900px 800px at 45% 100%, rgba(138,90,58,.12) 0%, transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0)),
+        var(--bg);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      opacity: .14;
+      background:
+        radial-gradient(circle at 10px 10px, rgba(216,106,135,.45) 2px, transparent 3px) 0 0/44px 44px,
+        radial-gradient(circle at 30px 28px, rgba(214,191,150,.45) 2px, transparent 3px) 0 0/44px 44px;
+      mix-blend-mode: multiply;
+    }
+
+    .wrap{
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 26px 18px 70px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 18px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius: 999px;
+      background: #ffffffb3;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 28px rgba(0,0,0,.06);
+      backdrop-filter: blur(10px);
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: linear-gradient(135deg, var(--brand), #f1a0b5);
+      box-shadow: 0 0 0 6px rgba(216,106,135,.14);
+    }
+    .badge span{font-size:13px;color:var(--muted)}
+    .ctaTop{display:flex; gap:10px; flex-wrap:wrap}
+
+    .btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      padding: 11px 14px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      text-decoration:none;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:active{transform: translateY(1px)}
+    .btnPrimary{
+      color:#fff;
+      background: linear-gradient(135deg, var(--brand), #c24d6e);
+      box-shadow: 0 18px 40px rgba(216,106,135,.25);
+    }
+    .btnGhost{
+      background:#ffffffb8;
+      border:1px solid var(--line);
+      color:var(--text);
+      box-shadow: 0 12px 28px rgba(0,0,0,.06);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero{
+      border-radius: var(--radius);
+      background:
+        radial-gradient(760px 420px at 18% 14%, rgba(216,106,135,.22), transparent 60%),
+        radial-gradient(640px 380px at 88% 10%, rgba(214,191,150,.22), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.55));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::before, .hero::after{
+      content:"";
+      position:absolute;
+      width: 300px;
+      height: 300px;
+      opacity:.22;
+      background:
+        radial-gradient(circle at 40% 35%, rgba(63,107,82,.65) 0 16px, transparent 17px),
+        radial-gradient(circle at 58% 62%, rgba(63,107,82,.55) 0 14px, transparent 15px),
+        radial-gradient(circle at 30% 70%, rgba(214,191,150,.80) 0 12px, transparent 13px),
+        radial-gradient(circle at 70% 28%, rgba(216,106,135,.70) 0 10px, transparent 11px);
+      border-radius: 999px;
+      transform: rotate(18deg);
+      filter: blur(.2px);
+    }
+    .hero::before{left:-130px; top:-130px}
+    .hero::after{right:-130px; bottom:-150px; transform: rotate(-18deg)}
+
+    .heroInner{
+      display:grid;
+      grid-template-columns: 1.25fr .95fr;
+      gap: 18px;
+      padding: 26px;
+      align-items: stretch;
+    }
+
+    .title{
+      font-family: Fraunces, serif;
+      font-size: clamp(34px, 4.4vw, 56px);
+      letter-spacing: -0.02em;
+      line-height: 1.02;
+      margin: 6px 0 12px;
+    }
+
+    .subtitle{
+      margin:0 0 16px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+      max-width: 54ch;
+    }
+
+    .chips{display:flex; gap:10px; flex-wrap:wrap; margin: 14px 0 0}
+    .chip{
+      background:#ffffffc0;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      box-shadow: 0 12px 24px rgba(0,0,0,.05);
+      backdrop-filter: blur(10px);
+    }
+    .chip b{color:var(--text); font-weight:600}
+
+    .cardRight{
+      background:#ffffffc7;
+      border:1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.08);
+      backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+      min-height: 100%;
+    }
+
+    .countdown{display:grid; grid-template-columns: repeat(4,1fr); gap: 10px}
+    .timeBox{
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,.06);
+      padding: 12px 10px;
+      text-align:center;
+      box-shadow: 0 12px 28px rgba(0,0,0,.05);
+    }
+    .timeBox .n{
+      font-family: Fraunces, serif;
+      font-size: 28px;
+      line-height: 1;
+      margin: 0 0 6px;
+      color: #b84f6b;
+    }
+    .timeBox .l{font-size: 12px; color: var(--muted); margin:0}
+
+    .divider{
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,.08), transparent);
+      margin: 4px 0;
+    }
+
+    .rsvp{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .panel{
+      border-radius: var(--radius);
+      background: #ffffffb9;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      padding: 18px;
+    }
+
+    h2{
+      margin: 0 0 10px;
+      font-family: Fraunces, serif;
+      letter-spacing: -0.01em;
+      font-size: 26px;
+    }
+    .muted{color:var(--muted); line-height:1.5; margin:0 0 14px}
+
+    form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .full{grid-column: 1 / -1}
+    label{font-size: 13px; color: var(--muted); display:block; margin: 0 0 6px}
+    input, select, textarea{
+      width:100%;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.92);
+      padding: 12px 12px;
+      font-size: 14px;
+      outline:none;
+      transition: box-shadow .12s ease, transform .12s ease, border-color .12s ease;
+    }
+    textarea{min-height: 92px; resize: vertical}
+    input:focus, select:focus, textarea:focus{
+      border-color: rgba(216,106,135,.55);
+      box-shadow: 0 0 0 6px rgba(216,106,135,.12);
+    }
+
+    .actions{display:flex; gap: 10px; flex-wrap:wrap; align-items:center; justify-content:flex-start}
+    .note{font-size: 12px; color: var(--muted); margin: 8px 0 0}
+
+    .wall{display:flex; flex-direction:column; gap: 10px; margin-top: 10px}
+    .msg{
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 14px 34px rgba(0,0,0,.06);
+    }
+    .msg b{font-size: 14px}
+    .msg p{margin:6px 0 0;color:var(--muted);line-height:1.45}
+
+    .toast{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: 420px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      display:none;
+      gap: 10px;
+      align-items:flex-start;
+      z-index: 9999;
+    }
+    .toast.show{display:flex; animation: pop .18s ease}
+    .toast .icon{
+      width: 34px; height:34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #34d399, #22c55e);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:800;
+      flex:0 0 auto;
+      box-shadow: 0 18px 40px rgba(34,197,94,.25);
+    }
+    .toast .t{font-weight:700; margin:0}
+    .toast .s{margin:4px 0 0; color:var(--muted); font-size: 13px; line-height:1.35}
+    @keyframes pop{from{transform:translateY(8px); opacity:.6} to{transform:translateY(0); opacity:1}}
+
+    .confetti{position: fixed; inset: 0; pointer-events:none; overflow:hidden; z-index: 9998}
+    .c{
+      position:absolute;
+      width:10px; height:16px;
+      border-radius: 3px;
+      opacity: .9;
+      animation: fall 1.2s linear forwards;
+      transform: translateY(-20px) rotate(0deg);
+    }
+    @keyframes fall{to{ transform: translateY(110vh) rotate(540deg); opacity: 1;}}
+
+    @media (max-width: 880px){
+      .heroInner{grid-template-columns: 1fr; padding: 18px}
+      .rsvp{grid-template-columns: 1fr}
+      form{grid-template-columns: 1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="badge">
+        <div class="dot"></div>
+        <span>Safari Baby • Confirmação de Presença</span>
+      </div>
+      <div class="ctaTop">
+        <a class="btn btnGhost" href="#rsvp">Confirmar agora</a>
+        <a class="btn btnPrimary" id="btnWhats" href="#">Falar no WhatsApp</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="heroInner">
+        <div>
+          <div class="chips">
+            <div class="chip"><b>Chá da:</b> <span id="babyName">Luiza</span></div>
+            <div class="chip"><b>Tema:</b> <span id="themeName">Safari Baby</span></div>
+          </div>
+
+          <h1 class="title">Você está convidado(a) para o nosso Chá de Bebê</h1>
+          <p class="subtitle">Confirme sua presença para ajudarmos nos preparativos.</p>
+
+          <div class="actions">
+            <a class="btn btnPrimary" href="#rsvp">Confirmar presença</a>
+            <a class="btn btnGhost" id="btnMaps" target="_blank" rel="noopener">Abrir no Maps</a>
+            <button class="btn btnGhost" id="btnIcs" type="button">Salvar no calendário</button>
+          </div>
+
+          <p class="note">Confirme mesmo se não puder ir. Assim a gente organiza tudo certinho.</p>
+        </div>
+
+        <aside class="cardRight">
+          <div>
+            <h2 style="margin:0 0 6px;">Contagem regressiva</h2>
+            <p class="muted" style="margin:0 0 12px;">Faltam só:</p>
+
+            <div class="countdown" aria-label="Contagem regressiva">
+              <div class="timeBox"><p class="n" id="d">00</p><p class="l">dias</p></div>
+              <div class="timeBox"><p class="n" id="h">00</p><p class="l">horas</p></div>
+              <div class="timeBox"><p class="n" id="m">00</p><p class="l">min</p></div>
+              <div class="timeBox"><p class="n" id="s">00</p><p class="l">seg</p></div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div>
+            <h2 style="margin:0 0 10px;">Detalhes</h2>
+            <div class="chip" style="width:100%; justify-content:space-between;">
+              <span><b>Data</b></span>
+              <span id="eventDateText">28/03/2026 (Sábado)</span>
+            </div>
+            <div class="chip" style="width:100%; justify-content:space-between;">
+              <span><b>Horário</b></span>
+              <span id="eventTimeText">16:00</span>
+            </div>
+            <div class="chip" style="width:100%; justify-content:space-between;">
+              <span><b>Local</b></span>
+              <span id="eventPlaceShort">Av. Malek Assad, 956 — Condomínio Residencial Lumina - Jacareí, SP</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="rsvp" id="rsvp" style="margin-top:18px">
+      <div class="panel">
+        <h2>Confirmação de presença</h2>
+        <p class="muted">Preencha rapidinho.</p>
+
+        <form id="rsvpForm" autocomplete="on">
+          <div>
+            <label>Seu nome</label>
+            <input id="name" name="name" placeholder="Ex: Maria Silva" required />
+          </div>
+
+          <div>
+            <label>WhatsApp</label>
+            <input id="whats" name="whats" placeholder="(11) 99999-9999" inputmode="tel" />
+          </div>
+
+          <div>
+            <label>Você vai?</label>
+            <select id="going" name="going" required>
+              <option value="" selected>Selecione</option>
+              <option value="Sim">Sim</option>
+              <option value="Talvez">Talvez</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Quantos adultos?</label>
+            <select id="adults" name="adults">
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Quantas crianças?</label>
+            <select id="kids" name="kids">
+              <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Restrição alimentar (opcional)</label>
+            <input id="diet" name="diet" placeholder="Ex: sem lactose, vegetariano..." />
+          </div>
+
+          <div class="full">
+            <label>Recadinho (opcional)</label>
+            <textarea id="message" name="message" placeholder="Escreva uma mensagem"></textarea>
+          </div>
+
+          <div class="full actions">
+            <button class="btn btnPrimary" type="submit" id="submitBtn">Enviar confirmação</button>
+            <button class="btn btnGhost" type="button" id="btnPreview">Pré-visualizar</button>
+          </div>
+
+          <div class="full">
+            <p class="note" id="privacyNote">Ao enviar, você concorda em compartilhar esses dados apenas para organização do evento.</p>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Recadinhos</h2>
+        <p class="muted">As mensagens enviadas aparecem aqui automaticamente.</p>
+        <div class="wall" id="wall"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="icon">✓</div>
+    <div>
+      <p class="t" id="toastTitle">Enviado!</p>
+      <p class="s" id="toastText">Sua confirmação foi registrada.</p>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <script>
+    const CONFIG = {
+      babyName: "Luiza",
+      themeName: "Safari Baby",
+      eventDateISO: "2026-03-28T16:00:00-03:00",
+      eventDateText: "28/03/2026 (Sábado)",
+      eventTimeText: "16:00",
+      eventPlaceShort: "Av. Malek Assad, 956 — Condomínio Residencial Lumina - Jacareí, SP",
+      mapsUrl: "https://www.google.com/maps?output=search&q=Av.+Malek+Assad,+956+-+Condom%C3%ADnio+Residencial+Lumina+Jacare%C3%AD-SP",
+      whatsappNumber: "5511999999999",
+      recadosAddEndpoint: "/.netlify/functions/recados_add",
+      recadosListEndpoint: "/.netlify/functions/recados_list"
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const pad = (n) => String(n).padStart(2, "0");
+
+    const setText = (id, val) => {
+      const el = $(id);
+      if (el) el.textContent = val;
+    };
+
+    setText("babyName", CONFIG.babyName);
+    setText("themeName", CONFIG.themeName);
+    setText("eventDateText", CONFIG.eventDateText);
+    setText("eventTimeText", CONFIG.eventTimeText);
+    setText("eventPlaceShort", CONFIG.eventPlaceShort);
+
+    const btnMaps = $("btnMaps");
+    if (btnMaps) btnMaps.href = CONFIG.mapsUrl;
+
+    const btnWhats = $("btnWhats");
+    if (btnWhats) {
+      btnWhats.href = "https://wa.me/" + encodeURIComponent(CONFIG.whatsappNumber) + "?text=" +
+        encodeURIComponent("Olá! Vim pela página do chá de bebê e queria tirar uma dúvida.");
+    }
+
+    const dtLocal = new Date(CONFIG.eventDateISO);
+    const dtUtcStart = new Date(dtLocal.getTime() - dtLocal.getTimezoneOffset() * 60000);
+    const dtUtcEnd = new Date(dtUtcStart.getTime() + (2 * 60 * 60 * 1000));
+
+    function tick(){
+      const now = Date.now();
+      const target = dtLocal.getTime();
+      let diff = Math.max(0, target - now);
+      const d = Math.floor(diff / (1000*60*60*24));
+      diff -= d * (1000*60*60*24);
+      const h = Math.floor(diff / (1000*60*60));
+      diff -= h * (1000*60*60);
+      const m = Math.floor(diff / (1000*60));
+      diff -= m * (1000*60);
+      const s = Math.floor(diff / 1000);
+      $("d").textContent = pad(d);
+      $("h").textContent = pad(h);
+      $("m").textContent = pad(m);
+      $("s").textContent = pad(s);
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    function downloadICS(){
+      const fmt = (d) => d.toISOString().replace(/[-:]/g,'').split('.')[0] + "Z";
+
+      const ics =
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Cha de Bebe//RSVP//PT-BR
+BEGIN:VEVENT
+UID:${Date.now()}@chadebebe
+DTSTAMP:${fmt(new Date())}
+DTSTART:${fmt(dtUtcStart)}
+DTEND:${fmt(dtUtcEnd)}
+SUMMARY:Chá de Bebê — ${CONFIG.babyName} (Safari Baby)
+LOCATION:${CONFIG.eventPlaceShort}
+DESCRIPTION:Confirmação de presença pelo site.
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
+      const a = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = "cha-de-bebe.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 2000);
+    }
+
+    const btnIcs = $("btnIcs");
+    if (btnIcs) btnIcs.addEventListener("click", downloadICS);
+
+    const toast = $("toast");
+    function showToast(title, text){
+      if (!toast) return;
+      $("toastTitle").textContent = title;
+      $("toastText").textContent = text;
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"), 4200);
+    }
+
+    function confetti(){
+      const root = $("confetti");
+      if (!root) return;
+      root.innerHTML = "";
+      const n = 32;
+      for(let i=0;i<n;i++){
+        const el = document.createElement("div");
+        el.className = "c";
+        el.style.left = (Math.random()*100) + "vw";
+        el.style.top = (-10 - Math.random()*20) + "px";
+        el.style.animationDelay = (Math.random()*0.2) + "s";
+        el.style.width = (8 + Math.random()*8) + "px";
+        el.style.height = (10 + Math.random()*14) + "px";
+        el.style.background = `hsl(${Math.random()*360}, 85%, 72%)`;
+        root.appendChild(el);
+      }
+      setTimeout(()=>root.innerHTML="", 1400);
+    }
+
+    const whatsInput = $("whats");
+    if (whatsInput) {
+      whatsInput.addEventListener("input", () => {
+        let v = (whatsInput.value || "").replace(/\D/g, "").slice(0, 11);
+        if (v.length >= 2) v = "(" + v.slice(0,2) + ") " + v.slice(2);
+        if (v.length > 10) v = v.slice(0, 10) + "-" + v.slice(10);
+        whatsInput.value = v;
+      });
+    }
+
+    function esc(s){
+      return (s ?? "").toString().replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    function renderWall(items){
+      const wall = $("wall");
+      if (!wall) return;
+      wall.innerHTML = "";
+      if (!items || !items.length){
+        const el = document.createElement("div");
+        el.className = "msg";
+        el.innerHTML = "<b>Sem recados ainda</b><p>Se quiser, deixe uma mensagem no formulário.</p>";
+        wall.appendChild(el);
+        return;
+      }
+      for(const it of items){
+        const el = document.createElement("div");
+        el.className = "msg";
+        el.innerHTML = "<b>" + esc(it.nome) + "</b><p>" + esc(it.mensagem) + "</p>";
+        wall.appendChild(el);
+      }
+    }
+
+    async function readJson(res){
+      const text = await res.text();
+      try { return JSON.parse(text); } catch { return {}; }
+    }
+
+    async function loadRecados(){
+      try{
+        const res = await fetch(CONFIG.recadosListEndpoint, { method: "GET", cache: "no-store" });
+        const data = await readJson(res);
+        if (!res.ok || data.success === false) return;
+        renderWall(data.items || []);
+      }catch{}
+    }
+
+    async function salvarRecado(payload){
+      const msg = (payload.message || "").trim();
+      const body = { nome: payload.name, whatsapp: payload.whats, mensagem: msg };
+
+      const res = await fetch(CONFIG.recadosAddEndpoint, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(body)
+      });
+
+      const data = await readJson(res);
+
+      if (!res.ok || data.success === false) {
+        throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
+      }
+    }
+
+    const btnPreview = $("btnPreview");
+    if (btnPreview) {
+      btnPreview.addEventListener("click", () => {
+        const name = ($("name").value || "").trim() || "Seu nome";
+        const going = ($("going").value || "") || "—";
+        const adults = ($("adults").value || "") || "1";
+        const kids = ($("kids").value || "") || "0";
+        const diet = ($("diet").value || "").trim();
+        const msg = ($("message").value || "").trim();
+
+        const text =
+          `Nome: ${name}\n`+
+          `Vai?: ${going}\n`+
+          `Adultos: ${adults} | Crianças: ${kids}\n`+
+          (diet ? `Restrição: ${diet}\n` : "")+
+          (msg ? `Recado: ${msg}` : "");
+
+        alert(text);
+      });
+    }
+
+    const form = $("rsvpForm");
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const payload = {
+          name: ($("name").value || "").trim(),
+          whats: ($("whats").value || "").trim(),
+          going: ($("going").value || ""),
+          adults: ($("adults").value || "1"),
+          kids: ($("kids").value || "0"),
+          diet: ($("diet").value || "").trim(),
+          message: ($("message").value || "").trim(),
+          created_at: new Date().toISOString()
+        };
+
+        if(!payload.name || !payload.going){
+          showToast("Atenção", "Preencha seu nome e selecione se vai ou não.");
+          return;
+        }
+
+        const btn = $("submitBtn");
+        const old = btn ? btn.textContent : "";
+        if (btn) { btn.disabled = true; btn.textContent = "Enviando..."; }
+
+        try{
+          await salvarRecado(payload);
+          showToast("Enviado", "Confirmação registrada.");
+          confetti();
+          form.reset();
+          await loadRecados();
+        }catch(err){
+          showToast("Erro", (err && err.message) ? err.message : "Tente novamente.");
+        }finally{
+          if (btn) { btn.disabled = false; btn.textContent = old; }
+        }
+      });
+    }
+
+    loadRecados();
+    setInterval(loadRecados, 15000);
+  </script>
+</body>
+</html>
