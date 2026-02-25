@@ -663,17 +663,22 @@ END:VCALENDAR`;
 }
 
 async function salvarRecado(payload){
-  const body = {
-    nome: payload.name,
-    whatsapp: payload.whats,
-    mensagem: buildMensagem(payload)
-  };
+  const body = { nome: payload.name, whatsapp: payload.whats, mensagem: payload.message };
 
   const res = await fetch(CONFIG.recadosAddEndpoint, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify(body)
   });
+
+  const text = await res.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch {}
+
+  if (!res.ok || data.success === false) {
+    throw new Error((data && data.message) ? data.message : ("Erro ao salvar. HTTP " + res.status));
+  }
+}
 
   const text = await res.text();
   let data = {};
@@ -756,5 +761,6 @@ async function salvarRecado(payload){
 </body>
 
 </html>
+
 
 
